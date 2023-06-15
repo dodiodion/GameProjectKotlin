@@ -16,34 +16,32 @@ fun main() {
     // Returns the number of remaining attempts
     // (initially 10)
     getRemainingAttempts(gameState)
-//
-//        isFinished(gameState) // false
-//
-//        // The letter is in the word - good guess
-//        val newGameState = attemptGuessLetter(gameState, "E")
-//
-//        getWordToGuess(newGameState) // "M__E__"
-//
-//        // The letter is not in the word - wrong guess
-//        val newGameState2 = attemptLetter(newGameState, "O")
-//
-//        getWordToGuess(newGameState2) // "M__E__"
-//
-//        getRemainingAttempts(newGameState2) // 9
-//
-//        // ...
-//        // And so on
-//        // until all letters have been guessed
-//
-//        val finalState = attemptLetter(newGameStateN, "S")
-//
-//        getWordToGuess(finalState) // "MAKERS"
-//
-//        isFinished(finalState) // true
+
+    isFinished(gameState) // false
+
+    // The letter is in the word - good guess
+    val newGameState = attemptGuessLetter(gameState, "E")
+
+    getWordToGuess(newGameState) // "M__E__"
+
+    // The letter is not in the word - wrong guess
+    val newGameState2 = attemptGuessLetter(newGameState, "O")
+
+    getWordToGuess(newGameState2) // "M__E__"
+
+    getRemainingAttempts(newGameState2) // 9
+
+    val finalState = attemptGuessLetter(newGameState2, "S")
+
+    getWordToGuess(finalState) // "MAKERS"
+
+    isFinished(finalState) // true
 }
 
 fun createGameState(listOfWords: List<String>):GameState {
-    return GameState(listOfWords.random())
+    val word = listOfWords.random()
+    val newDiscoveredList = mutableListOf<String>(word[0].toString())
+    return GameState(word, discovered = newDiscoveredList)
 }
 
 fun getWordToGuess(gameState: GameState): String {
@@ -83,8 +81,8 @@ fun attemptGuessLetter(gameState: GameState, letter: String): GameState {
         return GameState(gameState.word, gameState.numberAttempts, false, gameState.discovered)
     } else {
         println("The letter is not in the word - wrong guess")
-        if (gameState.numberAttempts-1 == 0) {
-            println("No more attemps")
+        if (gameState.numberAttempts-1 <= 0) {
+            println("No more attempts")
             return GameState(gameState.word, 0, true, gameState.discovered)
         }
         return GameState(gameState.word, gameState.numberAttempts-1, false, gameState.discovered)

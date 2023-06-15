@@ -4,7 +4,7 @@ import kotlin.test.Test
 
 class GameTest {
     @Test
-    fun getsMaskedWordToGuess() {
+    fun getsMaskedWordToGuessSuccess() {
         // Give the word to guess
         val state = createGameState(listOf("MAKERS"))
 
@@ -20,10 +20,39 @@ class GameTest {
         val gameStateE = attemptGuessLetter(state, "E")
         assertEquals(gameStateE.numberAttempts, 10)
 
-        val gameStateX = attemptGuessLetter(state, "X")
-        assertEquals(gameStateX.numberAttempts, 9)
+        assertEquals(getWordToGuess(gameStateE), "M__E__")
 
-        val gameStateNotAlpha = attemptGuessLetter(state, "4")
+        val gameStateX = attemptGuessLetter(gameStateE, "X")
         assertEquals(gameStateX.numberAttempts, 9)
+        assertEquals(getWordToGuess(gameStateX), "M__E__")
+
+        val gameStateA = attemptGuessLetter(gameStateX, "A")
+        assertEquals(gameStateA.numberAttempts, 9)
+        assertEquals(getWordToGuess(gameStateA), "MA_E__")
+
+        val gameStateK = attemptGuessLetter(gameStateA, "K")
+        assertEquals(gameStateK.numberAttempts, 9)
+        assertEquals(getWordToGuess(gameStateK), "MAKE__")
+
+        val gameStateR = attemptGuessLetter(gameStateK, "R")
+        assertEquals(gameStateR.numberAttempts, 9)
+        assertEquals(getWordToGuess(gameStateR), "MAKER_")
+        assertEquals(isFinished(gameStateR), false)
+
+        val gameStateS = attemptGuessLetter(gameStateR, "S")
+        assertEquals(gameStateS.numberAttempts, 9)
+        assertEquals(getWordToGuess(gameStateS), "MAKERS")
+
+        assertEquals(isFinished(gameStateS), true)
+    }
+    @Test
+    fun getsWordToGuessFailure() {
+        var state = createGameState(listOf("FAILURE"))
+        val maskedWord = getWordToGuess(state)
+        assertEquals(maskedWord, "F______")
+        for (i in 1..10) {
+            state = attemptGuessLetter(state, "Y")
+        }
+        assertEquals(true, isFinished(state))
     }
 }
